@@ -1,0 +1,37 @@
+[2026-04-21T17:48:41.098+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-04-21T17:48:41.170+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: medal_count_dag.create_table manual__2026-04-21T17:48:39.002458+00:00 [queued]>
+[2026-04-21T17:48:41.188+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: medal_count_dag.create_table manual__2026-04-21T17:48:39.002458+00:00 [queued]>
+[2026-04-21T17:48:41.189+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-04-21T17:48:41.217+0000] {taskinstance.py:2330} INFO - Executing <Task(MySqlOperator): create_table> on 2026-04-21 17:48:39.002458+00:00
+[2026-04-21T17:48:41.233+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'medal_count_dag', 'create_table', 'manual__2026-04-21T17:48:39.002458+00:00', '--job-id', '8', '--raw', '--subdir', 'DAGS_FOLDER/medal_dag.py', '--cfg-path', '/tmp/tmp4gr86p3j']
+[2026-04-21T17:48:41.239+0000] {standard_task_runner.py:91} INFO - Job 8: Subtask create_table
+[2026-04-21T17:48:41.250+0000] {logging_mixin.py:188} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61 DeprecationWarning: This process (pid=1036) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2026-04-21T17:48:41.256+0000] {standard_task_runner.py:63} INFO - Started process 1037 to run task
+[2026-04-21T17:48:41.348+0000] {task_command.py:426} INFO - Running <TaskInstance: medal_count_dag.create_table manual__2026-04-21T17:48:39.002458+00:00 [running]> on host f7490e149049
+[2026-04-21T17:48:41.520+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='medal_count_dag' AIRFLOW_CTX_TASK_ID='create_table' AIRFLOW_CTX_EXECUTION_DATE='2026-04-21T17:48:39.002458+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-04-21T17:48:39.002458+00:00'
+[2026-04-21T17:48:41.523+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-04-21T17:48:41.559+0000] {sql.py:276} INFO - Executing: 
+            CREATE TABLE IF NOT EXISTS medals (
+                id         INT AUTO_INCREMENT PRIMARY KEY,
+                medal_type VARCHAR(10)  NOT NULL,
+                count      INT          NOT NULL,
+                created_at DATETIME     NOT NULL
+            );
+        
+[2026-04-21T17:48:41.589+0000] {base.py:84} INFO - Using connection ID 'mysql_default' for task execution.
+[2026-04-21T17:48:41.610+0000] {base.py:84} INFO - Using connection ID 'mysql_default' for task execution.
+[2026-04-21T17:48:41.637+0000] {sql.py:470} INFO - Running statement: 
+            CREATE TABLE IF NOT EXISTS medals (
+                id         INT AUTO_INCREMENT PRIMARY KEY,
+                medal_type VARCHAR(10)  NOT NULL,
+                count      INT          NOT NULL,
+                created_at DATETIME     NOT NULL
+            );
+        , parameters: None
+[2026-04-21T17:48:41.700+0000] {sql.py:479} INFO - Rows affected: 0
+[2026-04-21T17:48:41.704+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-04-21T17:48:41.741+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=medal_count_dag, task_id=create_table, run_id=manual__2026-04-21T17:48:39.002458+00:00, execution_date=20260421T174839, start_date=20260421T174841, end_date=20260421T174841
+[2026-04-21T17:48:41.815+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-04-21T17:48:41.837+0000] {logging_mixin.py:188} WARNING - /home/***/.local/lib/python3.12/site-packages/***/models/baseoperator.py:1296 AirflowProviderDeprecationWarning: Call to deprecated class MySqlOperator. (Please use `***.providers.common.sql.operators.sql.SQLExecuteQueryOperator`.Also, you can provide `hook_params={'schema': <database>}`.)
+[2026-04-21T17:48:41.868+0000] {taskinstance.py:3498} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-04-21T17:48:41.870+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
