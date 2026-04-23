@@ -8,14 +8,14 @@ from datetime import datetime, timedelta
 import random
 import time
 
-# ── Default args ────────────────────────────────────────────────────────────
+#  Default args
 default_args = {
     "owner": "airflow",
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
 }
 
-# ── Custom sensor: перевіряє, що останній запис не старший за 30 сек ─────────
+# Custom sensor: перевіряє, що останній запис не старший за 30 сек
 class RecentRecordSensor(BaseSensorOperator):
     """
     Повертає True, якщо найновіший запис у таблиці medals
@@ -23,7 +23,7 @@ class RecentRecordSensor(BaseSensorOperator):
     """
 
     @apply_defaults
-    def __init__(self, mysql_conn_id: str = "goit_mysql_db_Anastasiia_Struchkova", table: str = "medals", **kwargs):
+    def __init__(self, mysql_conn_id: str = "goit_mysql_db_Anastasiia_Struchkova", table: str = "anastasiia_struchkova_medals", **kwargs):
         super().__init__(**kwargs)
         self.mysql_conn_id = mysql_conn_id
         self.table = table
@@ -43,7 +43,7 @@ class RecentRecordSensor(BaseSensorOperator):
         return age_seconds <= 30
 
 
-# ── Python-функції для завдань ───────────────────────────────────────────────
+# Python-функції для завдань
 def _pick_medal(**context):
     """Task 2: випадково обирає тип медалі."""
     medal = random.choice(["Bronze", "Silver", "Gold"])
@@ -63,7 +63,7 @@ def _branch(**context):
 
 
 def _count_and_insert(medal_type: str, **context):
-    """Tasks 4a/4b/4c: рахує записи й вставляє рядок у таблицю medals."""
+    """Tasks 4a/4b/4c: рахує записи й вставляє рядок у таблицю anastasiia_struchkova_medals."""
     hook = MySqlHook(mysql_conn_id="goit_mysql_db_Anastasiia_Struchkova")
 
     # Підраховуємо кількість записів для даного типу медалі
@@ -76,7 +76,7 @@ def _count_and_insert(medal_type: str, **context):
 
     # Вставляємо результат у нашу таблицю
     insert_sql = """
-        INSERT INTO medals (medal_type, count, created_at)
+        INSERT INTO anastasiia_struchkova_medals (medal_type, count, created_at)
         VALUES (%s, %s, NOW())
     """
     hook.run(insert_sql, parameters=(medal_type, count))
@@ -84,11 +84,11 @@ def _count_and_insert(medal_type: str, **context):
 
 def _sleep(**context):
     """Task 5: затримка виконання."""
-    sleep_seconds = 35          # змініть на < 30, щоб sensor пройшов успішно
+    sleep_seconds = 10          # змініти на менше, щоб sensor пройшов успішно
     time.sleep(sleep_seconds)
 
 
-# ── DAG ─────────────────────────────────────────────────────────────────────
+# DAG
 with DAG(
     dag_id="medal_count_dag",
     default_args=default_args,
@@ -104,7 +104,7 @@ with DAG(
         task_id="create_table",
         mysql_conn_id="goit_mysql_db_Anastasiia_Struchkova",
         sql="""
-            CREATE TABLE IF NOT EXISTS medals (
+            CREATE TABLE IF NOT EXISTS anastasiia_struchkova_medals (
                 id         INT AUTO_INCREMENT PRIMARY KEY,
                 medal_type VARCHAR(10)  NOT NULL,
                 count      INT          NOT NULL,
@@ -155,13 +155,13 @@ with DAG(
     check_recent = RecentRecordSensor(
         task_id="check_recent_record",
         mysql_conn_id="goit_mysql_db_Anastasiia_Struchkova",
-        table="medals",
+        table="anastasiia_struchkova_medals",
         poke_interval=5,
         timeout=60,
         mode="poke",
     )
 
-    # ── Залежності ────────────────────────────────────────────────────────────
+    # Залежності
     create_table >> pick_medal >> branch_task
     branch_task >> [count_bronze, count_silver, count_gold]
     [count_bronze, count_silver, count_gold] >> sleep_task >> check_recent
